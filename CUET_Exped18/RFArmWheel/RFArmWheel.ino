@@ -11,7 +11,7 @@ AF_DCMotor armRotate(3);
 #define rightMotorA 26
 #define rightMotorB 25
 #define rightEN 27
-
+#define clawMeanPos 140
 Servo actuatorA,actuatorB,claw;
 
 int channel1 = 28;
@@ -21,12 +21,20 @@ int channel4 = 31;
 int channel5 = 32;
 int channel6 = 33;
 
-
+int clawPos = clawMeanPos
+int arm_Horizontal = 90
+int arm_verticalA = 90
+int arm_verticalB = 90
 void setup() {
   // put your setup code here, to run once:
 actuatorA.attach(10);
 armRotate.run(RELEASE);
 armRotate.setSpeed(0);
+claw.attach(34);  // attaches the servo on pin 9 to the servo object
+claw.write(clawMeanPos); //initial position 140 degrees
+delay(100);
+Serial.print("Position = ");
+Serial.println(clawPos);
 Serial.begin(9600);
 //pinMode(xControlA,OUTPUT);
 //pinMode(xControlB,OUTPUT);
@@ -70,12 +78,24 @@ if((c1 && c2 && c3 && c4 && c5 && c6) == 0){
   armStop();
 }
 if(c4 > 1750 && c4 < 2000){
-  armRight();
-  delay(10);
+  if(arm_Horizontal > 0){
+    armRight();
+    delay(10);
+  }
+  else{
+    armStop();
+    delay(10);
+  }
 }
 else if(c4 > 1000 && c4 <1300){
-  armLeft();
-  delay(10);
+  if(arm_Horizontal < 180){
+    armLeft();
+    delay(10);
+  }
+  else{
+    armStop();
+    delay(10);
+  }
 }
 
 if(c2 > 1750 && c2 <2000){
@@ -174,17 +194,34 @@ void setMotorPins()
   pinMode(rightMotorB,OUTPUT);
   pinMode(rightEN,OUTPUT);
 }
+void clawGrab() {
+  claw.write(80);
+  pos = 80;
+  Serial.print("Grab Claw, Position = ");
+  Serial.println(clawPos);
+  delay(100);
+}
+
+void clawRelease() {
+  claw.write(150);
+  pos = 150;
+  Serial.print("Release Claw,  Position = ");
+  Serial.println(clawPos);
+  delay(100);
+}
 
 
 void armLeft()
 {
   armRotate.run(BACKWARD);
-  armRotate.setSpeed(240);
+  armRotate.setSpeed(200);
+  arm_Horizontal -= 10;
 }
 void armRight()
 {
   armRotate.run(FORWARD);
-  armRotate.setSpeed(240);
+  armRotate.setSpeed(200);
+  arm_Horizontal += 10
 }
 void armStop()
 {
@@ -205,24 +242,5 @@ void armMid()
 {
   
 }
-void grabClaw()
-{
-  claw.setSpeed(200);
-  claw.run(FORWARD);
-}
-void releaseClaw()
-{
-  claw.setSpeed(200);
-  claw.run(BACKWARD);
-}
-void rotateClawRight()
-{
-  clawRotate.setSpeed(150);
-  clawRotate.run(FORWARD);
-}
-void rotateClawLeft()
-{
-  clawRotate.setSpeed(150);
-  clawRotate.run(BACKWARD);
-}
+
 */
