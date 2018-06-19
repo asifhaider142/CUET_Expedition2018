@@ -11,7 +11,7 @@ AF_DCMotor armRotate(3);
 #define rightMotorA 26
 #define rightMotorB 25
 #define rightEN 27
-#define clawMeanPos 140
+#define clawMeanPos 150
 Servo actuatorA,actuatorB,claw;
 
 int channel1 = 28;
